@@ -2,6 +2,7 @@ package es.uam.irg.decidemadrid.nlp;
 
 import es.uam.irg.decidemadrid.db.DMDBManager;
 import es.uam.irg.decidemadrid.entities.DMComment;
+import es.uam.irg.decidemadrid.entities.DMProposal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +74,7 @@ public class DMTextProcessor {
         t = t.replace(" k ", " que ");
         t = t.replace(" xa ", " para ");
         t = t.replace(" xq ", " porque ");
+        t = t.replace(" pq ", " porque ");
         t = t.replace(" porq ", " porque ");
         t = t.replace(" yq eu ", " y que ");
         t = t.replace(" de el ", " del ");
@@ -84,6 +86,7 @@ public class DMTextProcessor {
         t = t.replace(" K ", " que ");
         t = t.replace(" XA ", " para ");
         t = t.replace(" XQ ", " porque ");
+        t = t.replace(" PQ ", " porque ");
         t = t.replace(" PORQ ", " porque ");
         t = t.replace(" Porqu ", " porque ");
         t = t.replace(" YQ EU ", " y que ");
@@ -101,9 +104,17 @@ public class DMTextProcessor {
         t = t.replace("¿porque", "¿Por qué");
         t = t.replace("¿Porque", "¿Por qué");
         t = t.replace("mí parte", "mi parte");
+        t = t.replace("Esta mal", "Está mal");
+        t = t.replace("Esta bien", "Está bien");
+        t = t.replace("esta mal", "está mal");
+        t = t.replace("esta bien", "está bien");
+        t = t.replace("Estan mal", "Están mal");
+        t = t.replace("Estan bien", "Están bien");
+        t = t.replace("estan mal", "están mal");
+        t = t.replace("estan bien", "están bien");
 
         for (String l : LOCATIONS) {
-            String l2 = l.toString();
+            String l2 = l;
             t = t.replace(l2, l);
         }
 
@@ -416,6 +427,8 @@ public class DMTextProcessor {
         t4 = t4 + ".";
         t4 = t4.replace("..", ".");
 
+        t4 = t4.trim();
+
         return t4;
     }
 
@@ -447,12 +460,29 @@ public class DMTextProcessor {
             LOCATIONS.remove("Aeropuerto");
             LOCATIONS.remove("Campamento");
 
-            Map<Integer, DMComment> comments = db.selectComments2();
+            Map<Integer, DMProposal> proposals = db.selectProposals2();
+            for (int id : proposals.keySet()) {
+                DMProposal proposal = proposals.get(id);
+                String title = proposal.getTitle();
+                String summary = proposal.getSummary();
+                String text = proposal.getText();
+
+                title = DMTextProcessor.process(title);
+                summary = DMTextProcessor.process(summary);
+                text = DMTextProcessor.process(text);
+
+                title = title.substring(0, title.length() - 1); // remove . at the end of the title
+
+                db.updateProposal2(id, title, summary, text);
+            }
+
+            Map<Integer, DMComment> comments = new HashMap<>();
+            //Map<Integer, DMComment> comments = db.selectComments2();
             for (int id : comments.keySet()) {
                 DMComment comment = comments.get(id);
                 String text = comment.getText();
                 String processedText = DMTextProcessor.process(text);
-
+                db.updateComment2(id, processedText);
                 System.out.println(processedText + "\t" + text);
 //
 //                // Word frequencies
