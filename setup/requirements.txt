@@ -1,0 +1,2 @@
+--extra-index-url https://AC74-E50B-BB93-51EA@download.prodi.gy/index
+prodigy>=1.11.0,<2.0.0
