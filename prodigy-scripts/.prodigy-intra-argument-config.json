@@ -1,0 +1,10 @@
+{
+	"custom_theme": {
+		"cardMaxWidth": 1000,
+		"cardMinWidth":600,
+		"largeText": 24,
+		"mediumText": 20,
+		"smallText": 16
+	},
+	"ui_lang": "es"
+}

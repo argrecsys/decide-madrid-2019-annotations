@@ -5,13 +5,11 @@ channels:
 dependencies:
   - bzip2=1.0.8
   - ca-certificates=2021.10.8
-  - intel-openmp=2022.0.0
   - libblas=3.9.0
   - libcblas=3.9.0
   - libffi=3.4.2
   - liblapack=3.9.0
   - libzlib=1.2.11
-  - mkl=2022.0.0
   - numpy=1.22.2
   - openssl=3.0.0
   - pandas=1.4.1
@@ -26,9 +24,6 @@ dependencies:
   - tbb=2021.5.0
   - tk=8.6.12
   - tzdata=2021e
-  - ucrt=10.0.20348.0
-  - vc=14.2
-  - vs2015_runtime
   - wheel=0.37.1
   - xz=5.2.5
   - pip:

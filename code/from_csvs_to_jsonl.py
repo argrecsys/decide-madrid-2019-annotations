@@ -37,6 +37,6 @@ def generate_json_separate_texts(proposals, comments, file_name):
         for proposal in proposals.id.unique():
             print_proposal_as_separate_texts(comments, proposals, proposal, file=f)
 
-proposals = pd.read_csv("../data/proposals.csv")
-comments = pd.read_csv("../data/comments.csv")
+proposals = pd.read_csv("../data/proposals.csv").fillna("")
+comments = pd.read_csv("../data/comments.csv").fillna("")
 generate_json_separate_texts(proposals, comments, "../data/raw_inputs.jsonl")
