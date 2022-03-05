@@ -6,5 +6,6 @@
 		"mediumText": 20,
 		"smallText": 16
 	},
-	"ui_lang": "es"
+	"ui_lang": "es",
+	"instructions": "instructions/instructions.html"
 }
