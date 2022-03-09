@@ -32,11 +32,12 @@ def print_proposal_as_separate_texts(comments, proposals, proposal_id, file=sys.
         print("{\"text\": \"" + text + "\", \"proposal_id\": \"" + str(proposal_id) + "\", \"info\": \"text\"}", file=file, sep='')
     print_comment_as_separate_texts(comments, comment_tree[proposal_id], file=file)
 
-def generate_json_separate_texts(proposals, comments, file_name):
-    with open(file_name, "w") as f:
-        for proposal in proposals.id.unique():
+def generate_json_separate_texts(proposals, comments, file_path):
+    for proposal in proposals.id.unique():
+        file_name = file_path + f"/{proposal}.jsonl"
+        with open(file_name, "w") as f:
             print_proposal_as_separate_texts(comments, proposals, proposal, file=f)
 
 proposals = pd.read_csv("../data/proposals.csv").fillna("")
 comments = pd.read_csv("../data/comments.csv").fillna("")
-generate_json_separate_texts(proposals, comments, "../data/raw_inputs.jsonl")
+generate_json_separate_texts(proposals, comments, "../data")
