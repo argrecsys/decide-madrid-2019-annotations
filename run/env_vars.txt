@@ -1,0 +1,2 @@
+PRODIGY_CONFIG_OVERRIDES='{"db_settings":{"sqlite":{"path":"C:/Dev Projects/decide-madrid-2019-labels/db", "name":"andres.db"}}}'
+PRODIGY_CONFIG="C:/Dev Projects/decide-madrid-2019-labels/prodigy-scripts/.prodigy-intra-argument-config.json"
