@@ -13,5 +13,5 @@ intra: check-PROPOSAL
 
 
 db-out-intra:
-	$(PRODIGY) db-out intra_$(USER) $(ROOT_DIR)/results/$(USER)-$(shell date +%m%d%Y-%H:%M:%S)
+	$(PRODIGY) db-out intra_$(USER) $(ROOT_DIR)/results/$(USER)-$(shell date +%m%d%Y-%H%M%S)
 
