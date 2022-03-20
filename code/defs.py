@@ -4,6 +4,8 @@ BIO = {
 	"I": 2
 }
 
+BIO_NAMES = list(BIO.keys())
+
 ARGUMENT_TYPES = {
 	"NA": 0,
 	"MAJOR_CLAIM": 1,
@@ -50,5 +52,24 @@ DEFAULTS = {
 	"relation_intent": "NA",
 	"relation_distance": 0
 }
+
+DEFAULT_TOKEN_FEATURE = [
+	DEFAULTS["bio"],
+	DEFAULTS["argument_type"],
+	DEFAULTS["relation_type"],
+	DEFAULTS["relation_intent"],
+	DEFAULTS["relation_distance"]
+]
+
+ALL_MAPPINGS = [BIO, ARGUMENT_TYPES, RELATION_TYPES, RELATION_INTENTS]
+
+## NN constants
+TRANSFORMER_HIDDEN_STATES_SIZE = 4
+COMMON_LAYER_SIZE = 512
+BIO_LAYER_SIZE = 128
+AM_TYPE_LAYER_SIZE = 128
+REL_TYPE_LAYER_SIZE = 128
+REL_INTENT_LAYER_SIZE = 128
+REL_DISTANCE_LAYER_SIZE = 128
 
 
