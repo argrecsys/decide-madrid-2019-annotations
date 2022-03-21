@@ -67,8 +67,8 @@ def define_model():
     model.compile(loss={"am_bio_output": "sparse_categorical_crossentropy",
                         "am_type_output": "sparse_categorical_crossentropy",
                         "am_rel_type_output": "sparse_categorical_crossentropy",
-                        "am_rel_intent_output": "sparse_categorical_crossentropy"
-                        "am_rel_distance_output": "mean_squared_error",},
+                        "am_rel_intent_output": "sparse_categorical_crossentropy",
+                        "am_rel_distance_output": "mean_squared_error"},
                   optimizer="adam",
                   metrics={"am_bio_output": tf.keras.metrics.SparseCategoricalAccuracy(name="am_bio_acc"),
                            "am_type_output": tf.keras.metrics.SparseCategoricalAccuracy(name="am_type_acc"),

@@ -1,3 +1,6 @@
+import sys, getopt
+from transformers import AutoTokenizer
+import tensorflow as tf
 from defs import *
 from define_model import define_model
 from BIO_to_numeric import *
@@ -10,12 +13,12 @@ def train_model(fin):
     tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
     tok = tokenizer(texts, padding="max_length", truncation=True, return_tensors="tf")
     tokenized_features = separate_each_feature(translate_tokens_to_features(tok, features))
-    numeric_features = map_all_features_to_numeric(tokenized_features[:-1], ALL_MAPPINGS)
-    numeric_features.append(tokenized_features[-1])
+    numeric_features = map_all_features_to_numeric(tokenized_features, ALL_MAPPINGS)
+    numeric_features = np.asarray(numeric_features).astype('float32')
+    numeric_features = np.transpose(numeric_features, (0,2,1))
+    num_feat_tensor = tf.convert_to_tensor(numeric_features)
 
-    model = define_model()
-
-    model.fit(tok.input_ids, numeric_features)
+    model.fit(tok.input_ids, num_feat_tensor)
 
 
 def main(argv):

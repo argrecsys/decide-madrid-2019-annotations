@@ -47,7 +47,7 @@ def extract_features_from_annotation(proposal):
 def write_features(fout, tokens, spans, span_types, relation_types, relation_intents, relation_distances):
     sentence_length = len(tokens)
     for idx in range(0, sentence_length):
-        print(tokens[idx], spans[idx], span_types[idx], relation_types[idx], relation_intents[idx], relation_distances[idx], sep=", ", file=fout)
+        print(tokens[idx], spans[idx], span_types[idx], relation_types[idx], relation_intents[idx], relation_distances[idx], sep="| ", file=fout)
     # Empty line to indicate a change of text
     print(file=fout)
 

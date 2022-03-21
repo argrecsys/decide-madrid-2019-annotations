@@ -46,7 +46,7 @@ RELATION_INTENTS = {
 RELATION_INTENTS_NAMES = list(RELATION_INTENTS.keys())
 
 DEFAULTS = {
-	"bio": "0",
+	"bio": "O",
 	"argument_type": "NA",
 	"relation_type": "NA",
 	"relation_intent": "NA",

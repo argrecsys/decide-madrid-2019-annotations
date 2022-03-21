@@ -44,15 +44,15 @@ def translate_tokens_to_features(tok, features):
     """
     tokenized_features = []
     # For phrase in tokenizer
-    for i in range(len(tok)):
+    for i in range(len(tok.input_ids)):
         features_tok_i = []
         # For token in phrase
-        for j in range(len(tok[i])):
+        for j in range(len(tok.input_ids[i])):
             w = tok[i].token_to_word(j) # Get the word_index from the token j in the phrase i
-            if w is None: # If there is no relation, is a token outside the original phrase
-                features_tok_i.append(DEFAULT_TOKEN_FEATURE)
-            else:
+            try:
                 features_tok_i.append(features[i][w])
+            except:
+                features_tok_i.append(DEFAULT_TOKEN_FEATURE)
         tokenized_features.append(features_tok_i)
     return tokenized_features
 
@@ -67,4 +67,15 @@ def map_all_features_to_numeric(features, mappings):
     """
     Maps all features with all dicts
     """
-    return [list(map(m.get, f)) for f,m in zip(features, mappings)]
+    feats = []
+    for phrase in features:
+        nmaps = len(mappings)
+        aux = [list(map(m.get, f)) for f,m in zip(phrase[:nmaps], mappings)]
+        for i in range(nmaps, len(phrase)):
+            aux.append([int(n) for n in phrase[i]])
+        feats.append(aux)
+    return feats
+    
+
+
+
