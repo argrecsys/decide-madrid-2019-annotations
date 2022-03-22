@@ -6,20 +6,13 @@ from define_model import define_model
 from BIO_to_numeric import *
 
 # TODO
-def train_model(fin):
-    with open(fin, "r") as f:
-        texts, features = get_texts_and_features(f)
-    # Get tokenizer
-    tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
-    tok = tokenizer(texts, padding="max_length", truncation=True, return_tensors="tf")
-    tokenized_features = separate_each_feature(translate_tokens_to_features(tok, features))
-    numeric_features = map_all_features_to_numeric(tokenized_features, ALL_MAPPINGS)
-    numeric_features = np.asarray(numeric_features).astype('float32')
-    numeric_features = np.transpose(numeric_features, (0,2,1))
-    num_feat_tensor = tf.convert_to_tensor(numeric_features)
+def train_model(fin, batch_size, epochs):
+    X,Y = obtain_features(fin)
+    model = define_model()
 
-    model.fit(tok.input_ids, num_feat_tensor)
+    history = model.fit(X, Y, batch_size=batch_size, epochs=epochs)
 
+    return model, history
 
 def main(argv):
     script_name = argv[0]

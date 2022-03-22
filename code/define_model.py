@@ -61,7 +61,9 @@ def define_model():
 
     
     # Declare model
-    model = tf.keras.models.Model(inputs = input_ids, outputs = [am_bio, am_type, am_rel_type, am_rel_intent, am_rel_distance], name="E2E_neural_model")
+    model = tf.keras.models.Model(inputs = input_ids,
+     outputs = [am_bio, am_type, am_rel_type, am_rel_intent, am_rel_distance],
+     name="E2E_neural_model")
 
     # Compile model
     model.compile(loss={"am_bio_output": "sparse_categorical_crossentropy",

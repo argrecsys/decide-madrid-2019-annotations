@@ -1,4 +1,6 @@
 from defs import *
+import numpy as np
+from transformers import AutoTokenizer
 
 def get_next_phrase(file):
     """
@@ -75,7 +77,23 @@ def map_all_features_to_numeric(features, mappings):
             aux.append([int(n) for n in phrase[i]])
         feats.append(aux)
     return feats
+
+def separate_in_list_of_np_features(features):
+    """
+    Separates so the nn can receive as outputs
+    """
+    return [np.asarray([f[i] for f in features]).astype("float32") for i in range(len(features[0]))]
     
-
-
+def obtain_features(fin):
+    """
+    Obtains all features for nn output
+    """
+    with open(fin, "r") as f:
+        texts, features = get_texts_and_features(f)
+    tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
+    tok = tokenizer(texts, padding="max_length", truncation=True, return_tensors="tf")
+    tokenized_features = separate_each_feature(translate_tokens_to_features(tok, features))
+    numeric_features = map_all_features_to_numeric(tokenized_features, ALL_MAPPINGS)
+    np_features = separate_in_list_of_np_features(numeric_features)
+    return tok.input_ids, np_features
 
