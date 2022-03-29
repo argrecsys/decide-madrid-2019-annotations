@@ -13,8 +13,8 @@ def train_model(ftrain, ftest, fvalidation, batch_size, epochs):
     model = define_model()
 
     history = model.fit(
-        X,
-        Y, 
+        Xtrain,
+        Ytrain, 
         batch_size=batch_size, 
         epochs=epochs, 
         validation_data=(Xvalidation, Yvalidation),
