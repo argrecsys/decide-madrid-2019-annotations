@@ -6,35 +6,60 @@ from define_model import define_model
 from BIO_to_numeric import *
 
 # TODO
-def train_model(fin, batch_size, epochs):
-    X,Y = obtain_features(fin)
+def train_model(ftrain, ftest, fvalidation, batch_size, epochs):
+    Xtrain, Ytrain = obtain_features(ftrain)
+    Xtest, Ytest = obtain_features(ftest)
+    Xvalidation, Yvalidation = obtain_features(fvalidation)
     model = define_model()
 
-    history = model.fit(X, Y, batch_size=batch_size, epochs=epochs)
+    history = model.fit(
+        X,
+        Y, 
+        batch_size=batch_size, 
+        epochs=epochs, 
+        validation_data=(Xvalidation, Yvalidation),
+        validation_freq=1
+    )
 
     return model, history
 
 def main(argv):
     script_name = argv[0]
-    fin = None
-    fout = sys.stdout
+    trainfile = None
+    testfile = None
+    validationfile = None
+    batchsize = None
+    epochs = None
+    error_string = f"run with $ {script_name} -r <trainfile> -s <testfile> -v <validationfile>"
     try:
-        opts, args = getopt.getopt(argv[1:],"hi:",["ifile="])
+        opts, args = getopt.getopt(
+            argv[1:],
+            "hr:s:v:b:e",
+            ["trainfile=", "testfile=", "validationfile=", "batchsize=", "epochs="]
+        )
     except getopt.GetoptError:
-        print(f"run with $ {script_name} -i <inputfile>")
+        print(error_string)
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print(f"run with $ {script_name} -i <inputfile>")
+            print(error_string)
             sys.exit()
-        elif opt in ("-i", "--ifile"):
-            fin = arg
+        elif opt in ("-r", "--trainfile"):
+            trainfile = arg
+        elif opt in ("-s", "--testfile"):
+            testfile = arg
+        elif opt in ("-v", "--validationfile"):
+            validationfile = arg
+        elif opt in ("-b", "--batchsize"):
+            validationfile = arg
+        elif opt in ("-e", "--epochs"):
+            validationfile = arg
 
-    if fin is None:
-        print(f"run with $ {script_name} -i <inputfile> [-o <outputfile>]")
+    if trainfile is None or testfile is None or validationfile is None or batchsize is None or epochs is None:
+        print(error_string)
         sys.exit(2)
 
-    train_model(fin)
+    train_model(trainfile, testfile, validationfile, batchsize, epochs)
 
 
 if __name__ == "__main__":
