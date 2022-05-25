@@ -48,7 +48,7 @@ def define_model(connect_heads=False, hidden_layers=1):
 
     # Ouput for relation type
     if connect_heads:
-        common = tf.keras.layers.concatenate((am_type, am_bio, common), name="bio_type_concatenation")
+        common = tf.keras.layers.concatenate((am_type, common), name="type_concatenation")
     ## Dense layer (None x 512 x REL_TYPE_LAYER_SIZE)
     am_rel_type = tf.keras.layers.Dense(REL_TYPE_LAYER_SIZE, activation="relu", name="am_rel_type")(common)
     ## Dense layer (None x 512 x len(RELATION_TYPES_NAMES))
@@ -56,7 +56,7 @@ def define_model(connect_heads=False, hidden_layers=1):
 
     # Ouput for relation intent
     if connect_heads:
-        common = tf.keras.layers.concatenate((am_rel_type, am_type, am_bio, common), name="bio_type_reltype_concatenation")
+        common = tf.keras.layers.concatenate((am_rel_type, common), name="reltype_concatenation")
     ## Dense layer (None x 512 x REL_INTENT_LAYER_SIZE)
     am_rel_intent = tf.keras.layers.Dense(REL_INTENT_LAYER_SIZE, activation="relu", name="am_rel_intent")(common)
     ## Dense layer (None x 512 x len(RELATION_INTENTS_NAMES))
@@ -64,7 +64,7 @@ def define_model(connect_heads=False, hidden_layers=1):
 
     # Output for relation distance
     if connect_heads:
-        common = tf.keras.layers.concatenate((am_rel_intent, am_rel_type, am_type, am_bio, common), name="bio_type_reltype_relintent_concatenation")
+        common = tf.keras.layers.concatenate((am_rel_intent, common), name="relintent_concatenation")
     ## Dense layer (None x 512 x REL_DISTANCE_LAYER_SIZE)
     am_rel_distance = tf.keras.layers.Dense(REL_DISTANCE_LAYER_SIZE, activation="linear", name="am_rel_distance")(common)
     ## Dense layer (None x 512 x 1)
