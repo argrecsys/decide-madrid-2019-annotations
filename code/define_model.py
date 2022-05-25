@@ -40,7 +40,7 @@ def define_model(connect_heads=False, hidden_layers=1):
 
     # Output for type of argument (Premise, Claim or Major Claim) (Argument classification)
     if connect_heads:
-        common = tf.keras.layers.concatenate((am_bio, common), name="bio_type_concatenation")
+        common = tf.keras.layers.concatenate((am_bio, common), name="bio_concatenation")
     ## Dense layer (None x 512 x AM_TYPE_LAYER_SIZE)
     am_type = tf.keras.layers.Dense(AM_TYPE_LAYER_SIZE, activation="relu", name="am_type")(common)
     ## Dense layer (None x 512 x len(ARGUMENT_TYPES_NAMES))
