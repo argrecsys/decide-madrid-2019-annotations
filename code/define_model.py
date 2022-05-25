@@ -1,5 +1,5 @@
 # Get tokenizer
-from transformers import AutoTokenizer, TFAutoModelForTokenClassification
+from transformers import AutoTokenizer, TFBertModel
 import tensorflow as tf
 from defs import *
 
@@ -8,7 +8,7 @@ def define_model(connect_heads=False, hidden_layers=1):
     tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
 
     # Get transformer model
-    transformer_model = TFAutoModelForTokenClassification.from_pretrained("dccuchile/bert-base-spanish-wwm-cased", output_hidden_states=True, name="bert_for_token_classification")
+    transformer_model = TFBertModel.from_pretrained("dccuchile/bert-base-spanish-wwm-cased", output_hidden_states=True, name="bert_for_token_classification")
 
     # Same size as the maximum number of tokens obtained from Autotokenizer
     input_size = tokenizer.model_max_length
@@ -76,17 +76,20 @@ def define_model(connect_heads=False, hidden_layers=1):
      outputs = [am_bio_output, am_type_output, am_rel_type_output, am_rel_intent_output, am_rel_distance_output],
      name="E2E_neural_model")
 
+    for layer in model.layers[0:3]: # Bert and concat layers
+        layer.trainable=False
+
     # Compile model
-    model.compile(loss={"am_bio_output": "sparse_categorical_crossentropy",
-                        "am_type_output": "sparse_categorical_crossentropy",
-                        "am_rel_type_output": "sparse_categorical_crossentropy",
-                        "am_rel_intent_output": "sparse_categorical_crossentropy",
+    model.compile(loss={"am_bio_output": "categorical_crossentropy",
+                        "am_type_output": "categorical_crossentropy",
+                        "am_rel_type_output": "categorical_crossentropy",
+                        "am_rel_intent_output": "categorical_crossentropy",
                         "am_rel_distance_output": "mean_squared_error"},
                   optimizer="adam",
-                  metrics={"am_bio_output": tf.keras.metrics.SparseCategoricalAccuracy(name="am_bio_acc"),
-                           "am_type_output": tf.keras.metrics.SparseCategoricalAccuracy(name="am_type_acc"),
-                           "am_rel_type_output": tf.keras.metrics.SparseCategoricalAccuracy(name="am_rel_type_output_acc"),
-                           "am_rel_intent_output": tf.keras.metrics.SparseCategoricalAccuracy(name="am_rel_intent_output_acc"),
+                  metrics={"am_bio_output": tf.keras.metrics.CategoricalAccuracy(name="am_bio_acc"),
+                           "am_type_output": tf.keras.metrics.CategoricalAccuracy(name="am_type_acc"),
+                           "am_rel_type_output": tf.keras.metrics.CategoricalAccuracy(name="am_rel_type_output_acc"),
+                           "am_rel_intent_output": tf.keras.metrics.CategoricalAccuracy(name="am_rel_intent_output_acc"),
                            "am_rel_distance_output": tf.keras.metrics.MeanSquaredError(name="am_rel_distance_mse")})
     return model
 

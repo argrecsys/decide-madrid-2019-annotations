@@ -9,7 +9,10 @@ from BIO_to_numeric import *
 def train_model(ftrain, ftest, fvalidation, batch_size, epochs, **kwargs):
     Xtrain, Ytrain = obtain_features(ftrain)
     Xtest, Ytest = obtain_features(ftest)
-    Xvalidation, Yvalidation = obtain_features(fvalidation)
+    try:
+        Xvalidation, Yvalidation = obtain_features(fvalidation)
+    except:
+        Xvalidation, Yvalidation = None, None
     model = define_model(**kwargs)
 
     history = model.fit(
@@ -17,7 +20,7 @@ def train_model(ftrain, ftest, fvalidation, batch_size, epochs, **kwargs):
         Ytrain, 
         batch_size=batch_size, 
         epochs=epochs, 
-        validation_data=(Xvalidation, Yvalidation),
+        validation_data=(Xvalidation, Yvalidation) if Xvalidation is not None else None,
         validation_freq=1
     )
 

@@ -1,46 +1,55 @@
+import numpy as np
+
+def get_one_hot_vector(length, element):
+    vec = np.zeros(length)
+    vec[element] = 1
+    return vec
+
 BIO = {
-	"O": 0,
-	"B": 1,
-	"I": 2
+	"O": get_one_hot_vector(3,0),
+	"B": get_one_hot_vector(3,1),
+	"I": get_one_hot_vector(3,2)
 }
 
 BIO_NAMES = list(BIO.keys())
 
 ARGUMENT_TYPES = {
-	"NA": 0,
-	"MAJOR_CLAIM": 1,
-	"CLAIM": 2,
-	"PREMISE": 3
+	"NA": get_one_hot_vector(5,0),
+	"MAJOR_CLAIM": get_one_hot_vector(5,1),
+	"CLAIM": get_one_hot_vector(5,2),
+	"PREMISE": get_one_hot_vector(5,3),
+    "LINKER": get_one_hot_vector(5,4),
 }
 
 ARGUMENT_TYPES_NAMES = list(ARGUMENT_TYPES.keys())
 
 RELATION_TYPES = {
-	"NA": 0,
-	"CONDITION": 1,
-	"REASON": 2,
-	"CONCLUSION": 3,
-	"EXEMPLIFICATION": 4,
-	"RESTATEMENT": 5,
-	"SUMMARY": 6,
-	"EXPLANATION": 7,
-	"GOAL": 8,
-	"RESULT": 9,
-	"ALTERNATIVE": 10,
-	"COMPARISON": 11,
-	"CONCESSION": 12,
-	"OPPOSITION": 13,
-	"ADDITION": 14,
-	"PRECISION": 15,
-	"SIMILARITY": 16
+	"NA": get_one_hot_vector(18,0),
+	"CONDITION": get_one_hot_vector(18,1),
+	"REASON": get_one_hot_vector(18,2),
+	"CONCLUSION": get_one_hot_vector(18,3),
+	"EXEMPLIFICATION": get_one_hot_vector(18,4),
+	"RESTATEMENT": get_one_hot_vector(18,5),
+	"SUMMARY": get_one_hot_vector(18,6),
+	"EXPLANATION": get_one_hot_vector(18,7),
+	"GOAL": get_one_hot_vector(18,8),
+	"RESULT": get_one_hot_vector(18,9),
+	"ALTERNATIVE": get_one_hot_vector(18,10),
+	"COMPARISON": get_one_hot_vector(18, 11),
+	"CONCESSION": get_one_hot_vector(18,12),
+	"OPPOSITION": get_one_hot_vector(18,13),
+	"ADDITION": get_one_hot_vector(18,14),
+	"PRECISION": get_one_hot_vector(18,15),
+	"SIMILARITY": get_one_hot_vector(18,16),
+    "LINKS": get_one_hot_vector(18,17)
 }
 
 RELATION_TYPES_NAMES = list(RELATION_TYPES.keys())
 
 RELATION_INTENTS = {
-	"NA": 0,
-	"SUPPORT": 1,
-	"ATTACK": 2
+	"NA": get_one_hot_vector(3,0),
+	"SUPPORT": get_one_hot_vector(3,1),
+	"ATTACK": get_one_hot_vector(3,2)
 }
 
 RELATION_INTENTS_NAMES = list(RELATION_INTENTS.keys())
@@ -65,7 +74,7 @@ ALL_MAPPINGS = [BIO, ARGUMENT_TYPES, RELATION_TYPES, RELATION_INTENTS]
 
 ## NN constants
 TRANSFORMER_HIDDEN_STATES_SIZE = 4
-COMMON_LAYER_SIZE = 512
+COMMON_LAYER_SIZE = 1024
 BIO_LAYER_SIZE = 128
 AM_TYPE_LAYER_SIZE = 128
 REL_TYPE_LAYER_SIZE = 128
