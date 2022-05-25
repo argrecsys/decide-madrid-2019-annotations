@@ -6,11 +6,11 @@ from define_model import define_model
 from BIO_to_numeric import *
 
 # TODO
-def train_model(ftrain, ftest, fvalidation, batch_size, epochs):
+def train_model(ftrain, ftest, fvalidation, batch_size, epochs, **kwargs):
     Xtrain, Ytrain = obtain_features(ftrain)
     Xtest, Ytest = obtain_features(ftest)
     Xvalidation, Yvalidation = obtain_features(fvalidation)
-    model = define_model()
+    model = define_model(**kwargs)
 
     history = model.fit(
         Xtrain,

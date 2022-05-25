@@ -3,7 +3,7 @@ from transformers import AutoTokenizer, TFAutoModelForTokenClassification
 import tensorflow as tf
 from defs import *
 
-def define_model():
+def define_model(connect_heads=False, hidden_layers=1):
     # Get tokenizer
     tokenizer = AutoTokenizer.from_pretrained("dccuchile/bert-base-spanish-wwm-cased")
 
@@ -24,45 +24,56 @@ def define_model():
     hidden_states_ind = list(range(-TRANSFORMER_HIDDEN_STATES_SIZE, 0)) # [-4, -3, -2, -1]
 
     # Concatenate the hidden states to get one "big" KerasTensor (None x 512 x (TRANSFORMER_HIDDEN_STATES_SIZE x 768))
-    selected_hidden_states = tf.keras.layers.concatenate(tuple([hidden_states[i] for i in hidden_states_ind]), name="concatenation")
+    selected_hidden_states = tf.keras.layers.concatenate(tuple([hidden_states[i] for i in hidden_states_ind]), name="hidden_states_concatenation")
 
-    # Common layer for all the outputs (None x 512 x COMMON_LAYER_SIZE)
-    common = tf.keras.layers.Dense(COMMON_LAYER_SIZE, activation="relu", name="common")(selected_hidden_states)
+    # Common layers for all the outputs (None x 512 x COMMON_LAYER_SIZE)
+    X = selected_hidden_states
+    for i in range(hidden_layers):
+        X = tf.keras.layers.Dense(COMMON_LAYER_SIZE, activation="relu", name=f"common{i}")(X)
+    common = X
 
     # Output for BIO (Argument detection)
     ## Dense layer (None x 512 x BIO_LAYER_SIZE)
     am_bio = tf.keras.layers.Dense(BIO_LAYER_SIZE, activation="relu", name="am_bio")(common)
     ## Dense layer (None x 512 x len(BIO_NAMES))
-    am_bio = tf.keras.layers.Dense(len(BIO_NAMES), activation="softmax", name="am_bio_output")(am_bio)
+    am_bio_output = tf.keras.layers.Dense(len(BIO_NAMES), activation="softmax", name="am_bio_output")(am_bio)
 
     # Output for type of argument (Premise, Claim or Major Claim) (Argument classification)
+    if connect_heads:
+        common = tf.keras.layers.concatenate((am_bio, common), name="bio_type_concatenation")
     ## Dense layer (None x 512 x AM_TYPE_LAYER_SIZE)
     am_type = tf.keras.layers.Dense(AM_TYPE_LAYER_SIZE, activation="relu", name="am_type")(common)
     ## Dense layer (None x 512 x len(ARGUMENT_TYPES_NAMES))
-    am_type = tf.keras.layers.Dense(len(ARGUMENT_TYPES_NAMES), activation="softmax", name="am_type_output")(am_type)
+    am_type_output = tf.keras.layers.Dense(len(ARGUMENT_TYPES_NAMES), activation="softmax", name="am_type_output")(am_type)
 
     # Ouput for relation type
+    if connect_heads:
+        common = tf.keras.layers.concatenate((am_type, am_bio, common), name="bio_type_concatenation")
     ## Dense layer (None x 512 x REL_TYPE_LAYER_SIZE)
     am_rel_type = tf.keras.layers.Dense(REL_TYPE_LAYER_SIZE, activation="relu", name="am_rel_type")(common)
     ## Dense layer (None x 512 x len(RELATION_TYPES_NAMES))
-    am_rel_type = tf.keras.layers.Dense(len(RELATION_TYPES_NAMES), activation="softmax", name="am_rel_type_output")(am_rel_type)
+    am_rel_type_output = tf.keras.layers.Dense(len(RELATION_TYPES_NAMES), activation="softmax", name="am_rel_type_output")(am_rel_type)
 
     # Ouput for relation intent
+    if connect_heads:
+        common = tf.keras.layers.concatenate((am_rel_type, am_type, am_bio, common), name="bio_type_concatenation")
     ## Dense layer (None x 512 x REL_INTENT_LAYER_SIZE)
     am_rel_intent = tf.keras.layers.Dense(REL_INTENT_LAYER_SIZE, activation="relu", name="am_rel_intent")(common)
     ## Dense layer (None x 512 x len(RELATION_INTENTS_NAMES))
-    am_rel_intent = tf.keras.layers.Dense(len(RELATION_INTENTS_NAMES), activation="softmax", name="am_rel_intent_output")(am_rel_intent)
+    am_rel_intent_output = tf.keras.layers.Dense(len(RELATION_INTENTS_NAMES), activation="softmax", name="am_rel_intent_output")(am_rel_intent)
 
     # Output for relation distance
+    if connect_heads:
+        common = tf.keras.layers.concatenate((am_rel_intent, am_rel_type, am_type, am_bio, common), name="bio_type_concatenation")
     ## Dense layer (None x 512 x REL_DISTANCE_LAYER_SIZE)
     am_rel_distance = tf.keras.layers.Dense(REL_DISTANCE_LAYER_SIZE, activation="linear", name="am_rel_distance")(common)
     ## Dense layer (None x 512 x 1)
-    am_rel_distance = tf.keras.layers.Dense(1, activation="linear", name="am_rel_distance_output")(am_rel_distance)
+    am_rel_distance_output = tf.keras.layers.Dense(1, activation="linear", name="am_rel_distance_output")(am_rel_distance)
 
     
     # Declare model
     model = tf.keras.models.Model(inputs = input_ids,
-     outputs = [am_bio, am_type, am_rel_type, am_rel_intent, am_rel_distance],
+     outputs = [am_bio_output, am_type_output, am_rel_type_output, am_rel_intent_output, am_rel_distance_output],
      name="E2E_neural_model")
 
     # Compile model
