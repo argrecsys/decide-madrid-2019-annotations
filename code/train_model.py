@@ -2,27 +2,33 @@ import sys, getopt
 from transformers import AutoTokenizer
 import tensorflow as tf
 from defs import *
-from define_model import define_model
+from define_model import define_model, set_bert_to_trainable
 from BIO_to_numeric import *
 
 # TODO
-def train_model(ftrain, ftest, fvalidation, batch_size, epochs, **kwargs):
+def train_model(ftrain, ftest, batch_size, epochs, train_bert_epochs, **kwargs):
     Xtrain, Ytrain = obtain_features(ftrain)
     Xtest, Ytest = obtain_features(ftest)
-    try:
-        Xvalidation, Yvalidation = obtain_features(fvalidation)
-    except:
-        Xvalidation, Yvalidation = None, None
+
     model = define_model(**kwargs)
 
     history = model.fit(
         Xtrain,
         Ytrain, 
         batch_size=batch_size, 
-        epochs=epochs, 
-        validation_data=(Xvalidation, Yvalidation) if Xvalidation is not None else None,
-        validation_freq=1
+        epochs=epochs
     )
+
+    if train_bert_epochs > 0:
+        model = set_bert_to_trainable(model)
+
+        bert_history = model.fit(
+            Xtrain,
+            Ytrain, 
+            batch_size=batch_size, 
+            epochs=train_bert_epochs
+        )
+        history = (history, bert_history)
 
     return model, history
 

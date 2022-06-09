@@ -95,3 +95,10 @@ def define_model(connect_heads=False, hidden_layers=1):
 
 def plot_model(model, fout):
     tf.keras.utils.plot_model(model, show_layer_activations=True, to_file=fout)
+
+def set_bert_to_trainable(model):
+    for layer in model.layers[0:3]: # Bert and concat layers
+        layer.trainable=True
+
+    return model
+    
