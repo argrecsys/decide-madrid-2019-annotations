@@ -85,7 +85,7 @@ def define_model(connect_heads=False, hidden_layers=1):
                         "am_rel_type_output": "categorical_crossentropy",
                         "am_rel_intent_output": "categorical_crossentropy",
                         "am_rel_distance_output": "mean_squared_error"},
-                  optimizer="adam",
+                  optimizer=tf.keras.optimizers.Adam(), # Default learning rate
                   metrics={"am_bio_output": tf.keras.metrics.CategoricalAccuracy(name="am_bio_acc"),
                            "am_type_output": tf.keras.metrics.CategoricalAccuracy(name="am_type_acc"),
                            "am_rel_type_output": tf.keras.metrics.CategoricalAccuracy(name="am_rel_type_output_acc"),
@@ -100,5 +100,16 @@ def set_bert_to_trainable(model):
     for layer in model.layers[0:3]: # Bert and concat layers
         layer.trainable=True
 
+    model.compile(loss={"am_bio_output": "categorical_crossentropy",
+                        "am_type_output": "categorical_crossentropy",
+                        "am_rel_type_output": "categorical_crossentropy",
+                        "am_rel_intent_output": "categorical_crossentropy",
+                        "am_rel_distance_output": "mean_squared_error"},
+                  optimizer=tf.keras.optimizers.Adam(1e-5), # Lower learning rate
+                  metrics={"am_bio_output": tf.keras.metrics.CategoricalAccuracy(name="am_bio_acc"),
+                           "am_type_output": tf.keras.metrics.CategoricalAccuracy(name="am_type_acc"),
+                           "am_rel_type_output": tf.keras.metrics.CategoricalAccuracy(name="am_rel_type_output_acc"),
+                           "am_rel_intent_output": tf.keras.metrics.CategoricalAccuracy(name="am_rel_intent_output_acc"),
+                           "am_rel_distance_output": tf.keras.metrics.MeanSquaredError(name="am_rel_distance_mse")})
     return model
     

@@ -5,7 +5,7 @@ from defs import *
 from define_model import define_model, set_bert_to_trainable
 from BIO_to_numeric import *
 
-# TODO
+
 def train_model(ftrain, ftest, batch_size, epochs, train_bert_epochs, **kwargs):
     Xtrain, Ytrain = obtain_features(ftrain)
     Xtest, Ytest = obtain_features(ftest)
@@ -26,7 +26,8 @@ def train_model(ftrain, ftest, batch_size, epochs, train_bert_epochs, **kwargs):
             Xtrain,
             Ytrain, 
             batch_size=batch_size, 
-            epochs=train_bert_epochs
+            epochs=train_bert_epochs + epochs,
+            initial_epoch = epochs
         )
         history = (history, bert_history)
 
