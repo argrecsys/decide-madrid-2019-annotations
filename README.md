@@ -1,8 +1,11 @@
-# Decide Madrid 2019-9 labels
+# Decide Madrid 2019-9 annotations
 Repository with the labels and annotations made on the Decide Madrid 2019 dataset, using different types of annotation tools.
 
 ## Datasets
-- MySQL: Decide Madrid 2019-09 database.
+The source data set from which we intend to create the Decide Madrid argument corpus is:
+- Decide Madrid 2019-09 database (MySQL).
+
+The source data extracted from the database and stored in JSON files can be viewed in the following <a href="https://github.com/argrecsys/decide-madrid-2019-annotations/tree/main/data">folder</a>.
 
 ## Authors
 Created on Jun 29, 2022  
