@@ -15,7 +15,7 @@ Created by:
 - <a href="https://github.com/OscarGB" target="_blank">Óscar Borzdynski</a>
 
 ## License
-This project is licensed under the terms of the <a href="https://github.com/argrecsys/argael/blob/main/LICENSE">Apache License 2.0</a>.
+This project is licensed under the terms of the <a href="https://github.com/argrecsys/decide-madrid-2019-annotations/blob/main/LICENSE">Apache License 2.0</a>.
 
 ## Acknowledgements
 This work was supported by the Spanish Ministry of Science and Innovation (PID2019-108965GB-I00).
