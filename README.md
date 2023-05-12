@@ -1,8 +1,8 @@
 # Decide Madrid 2019-9 annotations
-Repository with the labels and annotations made on the Decide Madrid 2019 dataset, using different types of annotation tools.
+Repository with the labels and annotations made on the Decide Madrid 2019 dataset, using different types of annotation tools (such as, <a href="https://argrecsys.github.io/argael/">ARGAEL</a> or <a href="https://prodi.gy/">prodigy</a>).
 
-## Datasets
-The source data set from which we intend to create the Decide Madrid argument corpus is:
+## Dataset
+The source dataset from which we are creating the Decide Madrid argument corpus is:
 - Decide Madrid 2019-09 database (MySQL).
 
 The source data extracted from the database and stored in JSON files can be viewed in the following <a href="https://github.com/argrecsys/decide-madrid-2019-annotations/tree/main/data">folder</a>.
